@@ -1,9 +1,27 @@
 <script src="https://unpkg.com/@isomorphic-git/lightning-fs"></script>
 <script src="https://unpkg.com/isomorphic-git"></script>
-<script type="module">
-import http from 'https://unpkg.com/isomorphic-git@beta/http/web/index.js'
-const fs = new LightningFS('fs')
+<script>
 
-const dir = '/test-clone'
-git.clone({ fs, http, dir, url: 'https://github.com/isomorphic-git/lightning-fs', corsProxy: 'https://cors.isomorphic-git.org' }).then(console.log)
+// Initialize isomorphic-git with a file system
+window.fs = new LightningFS('fs')
+git.plugins.set('fs', window.fs)
+
+// I prefer using the Promisified version honestly
+window.pfs = window.fs.promises
+
+window.dir = $input(('/tutorial'))
+console.log(dir);
+await pfs.mkdir(dir);
+// Behold - it is empty!
+await pfs.readdir(dir);
+
+await git.clone({
+  dir,
+  corsProxy: 'https://cors.isomorphic-git.org',
+  url: 'https://github.com/isomorphic-git/isomorphic-git',
+  ref: 'master',
+  singleBranch: true,
+  depth: 10
+});
+
 </script>
